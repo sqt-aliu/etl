@@ -4,6 +4,7 @@ import csv
 import getopt
 import glob
 import gzip
+import math
 import os
 import sys
 from datetime import datetime, timedelta
@@ -31,7 +32,7 @@ def count_check(filefmt, dates):
             linecnt = file_linecount(foundfile)    
             rowcntsum += linecnt
             rowcnt += 1
-            details = "File '%s', %i lines" % (foundfile, linecnt)
+            details = "File '%s', %i lines, %s" % (foundfile, linecnt, convert_size(os.path.getsize(foundfile)))
             summary.append(details)
             info(details)
         else:
@@ -48,6 +49,15 @@ def file_linecount(file):
     else:
         cnt = sum(1 for line in open(file, 'r', encoding="ISO-8859-1"))
     return cnt
+
+def convert_size(size_bytes):
+   if size_bytes == 0:
+       return "0B"
+   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+   i = int(math.floor(math.log(size_bytes, 1024)))
+   p = math.pow(1024, i)
+   s = round(size_bytes / p, 2)
+   return "%s %s" % (s, size_name[i])
     
 def file_check(argv):
     filefmt = argv[0]
@@ -63,13 +73,13 @@ def file_check(argv):
     if len(files) > 0:
         foundfile = max(files, key=os.path.getctime)
         tdycnt = file_linecount(foundfile)
-        avgcnt, info = count_check(filefmt, dates)
-        info.insert(0, "File '%s', %i lines" % (foundfile, tdycnt))
+        avgcnt, summary = count_check(filefmt, dates)
+        summary.insert(0, "File '%s', %i lines, %s" % (foundfile, tdycnt, convert_size(os.path.getsize(foundfile))))
         pctchg = ((tdycnt - avgcnt) / avgcnt) if avgcnt > 0. else 0.
         if abs(pctchg) > tolerance:
-            return (WARN, "File '%s' exceeds tolerance levels<br>Stats: pctchg=%0.2f, tolerance=%0.2f, today=%i, avg=%0.2f<br>%s" % (file, pctchg * 100., tolerance * 100., tdycnt, avgcnt, "<br>".join(info)))
+            return (WARN, "File '%s' exceeds tolerance levels<br>Stats: pctchg=%0.2f, tolerance=%0.2f, today=%i, avg=%0.2f<br>%s" % (file, pctchg * 100., tolerance * 100., tdycnt, avgcnt, "<br>".join(summary)))
         else:
-            return (SUCCESS, "Stats: pctchg=%0.2f, tolerance=%0.2f, today=%i, avg=%0.2f<br>%s" % (pctchg * 100., tolerance * 100., tdycnt, avgcnt, "<br>".join(info)))         
+            return (SUCCESS, "Stats: pctchg=%0.2f, tolerance=%0.2f, today=%i, avg=%0.2f<br>%s" % (pctchg * 100., tolerance * 100., tdycnt, avgcnt, "<br>".join(summary)))         
     else:
         return (ERROR, "File '%s' does not exist" % (file))
            
