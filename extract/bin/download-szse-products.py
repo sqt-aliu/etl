@@ -57,7 +57,7 @@ def main(argv):
     xlsfile = argOutput + "/" + today + "/" + today + ".stockproducts.xlsx"
     download_products(xlsfile, "http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=EXCEL&CATALOGID=1693&tab1PAGENUM=1&ENCODE=1&TABKEY=tab1", True)
     xlsfile = argOutput + "/" + today + "/" + today + ".fundproducts.xlsx"
-    download_products(xlsfile, "http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=EXCEL&CATALOGID=1956&tab1PAGENO=1&ENCODE=1&TABKEY=tab1", True)
+    download_products(xlsfile, "http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=EXCEL&CATALOGID=1956&tab1PAGENUM=1&ENCODE=1&TABKEY=tab1", True)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
