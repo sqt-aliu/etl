@@ -23,3 +23,5 @@ Extract Transform Load - Asia Pacific Historical Data
 /home/sqtdata/etl/load/bin/record-aastocks-dividends.py -t hkex -d 'mysql+mysqlconnector://sqtdata:sqtdata123@10.59.150.61:3306/equities'
 /home/sqtdata/etl/load/bin/record-aastocks-dividends.py -t szse -d 'mysql+mysqlconnector://sqtdata:sqtdata123@10.59.150.61:3306/equities'
 /home/sqtdata/etl/load/bin/record-aastocks-dividends.py -t sse -d 'mysql+mysqlconnector://sqtdata:sqtdata123@10.59.150.61:3306/equities'
+7. Load Overrides
+/home/sqtdata/etl/load/bin/record-override-quotes.py -d 'mysql+mysqlconnector://sqtdata:sqtdata123@10.59.150.61:3306/equities'

@@ -23,7 +23,7 @@ def insert_quotes(inputfile, dbconn):
             try:
                 sql = record_builder(row, "REPLACE")
                 info("Executing query [%s]" % (sql))
-                #db.execute(sql)   
+                db.execute(sql)   
             except exc.IntegrityError as e:
                 error("DB Integrity Error: %s, sql=%s" % (e, sql))  
             except exc.SQLAlchemyError as e:
