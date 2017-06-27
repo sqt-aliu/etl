@@ -29,10 +29,10 @@ def check_divs(dbconn):
         error(str(sys.exc_info()))
     return (count)
         
-def insert_divs(inputfile, dbconn, startdate):
+def insert_divs(inputfile, dbconn, startdate, enddate):
     basename = os.path.basename(inputfile)
     basedate = datetime.strptime(basename.split('.')[0], '%Y%m%d')
-    if basedate < startdate:
+    if basedate < startdate or basedate > enddate:
         return    
         
     try:
@@ -53,13 +53,13 @@ def insert_divs(inputfile, dbconn, startdate):
         error("Unknown Error: %s, conn=%s" % (sys.exc_info()[0], dbconn))   
         error(str(sys.exc_info()))
         
-def record_divs(inputpath, dbconn, startdate):
+def record_divs(inputpath, dbconn, startdate, enddate):
     inputsearch = "%s/*/*.stockdivs.csv" % (inputpath)
     info("Searching pattern [%s]" % (inputsearch))
     files = sorted(glob.glob(inputsearch))
     
     for file in files:
-        insert_divs(file, dbconn, startdate)
+        insert_divs(file, dbconn, startdate, enddate)
            
 def print_usage():
     print  ("  Usage: %s [options]" % (os.path.basename(__file__))) 
@@ -67,15 +67,17 @@ def print_usage():
     print  ("  \t-i, --input\tinput directory")
     print  ("  \t-d, --database\tdatabase connection string")
     print  ("  \t-s, --startdate\tstart date (YYYMMDD)")
+    print  ("  \t-e, --enddate\tend date (YYYMMDD)")
     print  ("  \t-h,\t\thelp")
     
 def main(argv):
     argInput = "/dfs/stage/factset/"
     argDBConn = ""
     argStartDate = datetime.strptime('20000101', '%Y%m%d')
+    argEndDate = datetime.strptime('20161014', '%Y%m%d')
     
     try:
-        opts, args = getopt.getopt(argv,"hi:d:s:",["input=","database=","startdate="])
+        opts, args = getopt.getopt(argv,"hi:d:s:e:",["input=","database=","startdate=","enddate="])
     except getopt.GetoptError:
         print_usage()
         sys.exit(2)
@@ -89,7 +91,9 @@ def main(argv):
             argDBConn = arg   
         elif opt in ("-s", "--startdate"):
             argStartDate = datetime.strptime(arg, '%Y%m%d')               
-
+        elif opt in ("-e", "--enddate"):
+            argEndDate = datetime.strptime(arg, '%Y%m%d')   
+            
     if len(argDBConn) == 0 or len(argInput) == 0:
         print_usage()
         sys.exit(0)
@@ -97,7 +101,7 @@ def main(argv):
     if check_divs(argDBConn) > 0:
         fatal("dvd table must be empty before inserting!")
     else:
-        record_divs(argInput, argDBConn, argStartDate)
+        record_divs(argInput, argDBConn, argStartDate, argEndDate)
   
 
 if __name__ == '__main__':
