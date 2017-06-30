@@ -6,6 +6,7 @@ import glob
 import gzip
 import math
 import os
+import socket
 import sys
 from datetime import datetime, timedelta
 from time import sleep
@@ -157,7 +158,7 @@ def process_checks(group, checks):
     html += "</body>\n</table>\n</html>"
     info(html)
 
-    subj = "[%s] [%s] Monitor" % ("ALARM" if alarm else "OK", group)
+    subj = "[%s] [%s] [%s] Monitor" % ("ALARM" if alarm else "OK", group, socket.gethostname())
     dist = "allenliu@htsc.com"
     mail_html(html, subj, dist, "sqt@htsc.com")
     #mail_html(html, subj, "allenliu@htsc.com", "sqt@htsc.com")
