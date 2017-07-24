@@ -3,6 +3,7 @@ import json
 import sys
 import getopt
 import os.path
+from time import sleep
 from datetime import datetime, date
 from urllib.request import urlopen, urlretrieve, Request
 from urllib.parse import urlencode
@@ -14,7 +15,7 @@ from common.lib.log import debug, error, fatal, info, warn
 def download_key(iteration=1, max_tries=5):
     keygen = ""
     try:
-        url = "http://tglobal.krx.co.kr/contents/COM/GenerateOTP.jspx?bld=COM/finder_stkisu_en&name=form&_=1497515946793"
+        url = "http://global.krx.co.kr/contents/COM/GenerateOTP.jspx?bld=COM/finder_stkisu_en&name=form&_=1497515946793"
         info("Retrieving url %s" % (url))
         urlResp = urlopen(url, timeout=60)
         charset=urlResp.info().get_content_charset()
@@ -25,18 +26,22 @@ def download_key(iteration=1, max_tries=5):
     except HTTPError as e:
         error("HTTP Error: %s, url=%s, attempt=%i" % (str(e.code), url, iteration))
         if iteration <= max_tries:
+            sleep(iteration)
             download_key(iteration=iteration+1)           
     except URLError as e:
         error("URL Error: %s, url=%s, attempt=%i" % (e.reason, url, iteration))
         if iteration <= max_tries:
+            sleep(iteration)
             download_key(iteration=iteration+1)               
     except OSError as e:
         error("OS Error: %s, url=%s, attempt=%i" % (e, url, iteration))      
         if iteration <= max_tries:
+            sleep(iteration)
             download_key(iteration=iteration+1)               
     except:
         error("Unknown Error: %s, url=%s, attempt=%i" % (sys.exc_info()[0], url, iteration))   
         if iteration <= max_tries:
+            sleep(iteration)
             download_key(iteration=iteration+1)     
     return keygen
     
@@ -53,7 +58,7 @@ def download_json(keygen, iteration=1, max_tries=5):
 
         params = urlencode(params)
         params = params.encode('ascii') # data should be bytes        
-        url = "http://tglobal.krx.co.kr/contents/GLB/99/GLB99000001.jspx"
+        url = "http://global.krx.co.kr/contents/GLB/99/GLB99000001.jspx"
         req = Request(url, params)     
         info("Retrieving url %s" % (url))
         urlResp = urlopen(req, timeout=120)
@@ -66,18 +71,22 @@ def download_json(keygen, iteration=1, max_tries=5):
     except HTTPError as e:
         error("HTTP Error: %s, url=%s, attempt=%i" % (str(e.code), url, iteration))
         if iteration <= max_tries:
+            sleep(iteration)
             download_json(keygen, iteration=iteration+1)           
     except URLError as e:
         error("URL Error: %s, url=%s, attempt=%i" % (e.reason, url, iteration))
         if iteration <= max_tries:
+            sleep(iteration)
             download_json(keygen, iteration=iteration+1)                         
     except OSError as e:
         error("OS Error: %s, url=%s, attempt=%i" % (e, url, iteration))      
         if iteration <= max_tries:
+            sleep(iteration)
             download_json(keygen, iteration=iteration+1)                     
     except:
         error("Unknown Error: %s, url=%s, attempt=%i" % (sys.exc_info()[0], url, iteration))   
         if iteration <= max_tries:
+            sleep(iteration)
             download_json(keygen, iteration=iteration+1)            
     return products
     
