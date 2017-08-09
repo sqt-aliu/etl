@@ -18,7 +18,7 @@ def convert_summary(cdate, ctype, cinput, coutput):
         retval = ""
         if rootkey in quote:
             if quotekey in quote[rootkey]:
-                if datatype in quote[rootkey][quotekey]:
+                if (type(quote[rootkey][quotekey]) is dict) and (datatype in quote[rootkey][quotekey]):
                     datastr = str(quote[rootkey][quotekey][datatype])
                     if "%" in datastr:
                         retval = datastr.rstrip("%")

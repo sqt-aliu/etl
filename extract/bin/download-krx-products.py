@@ -15,7 +15,7 @@ from common.lib.log import debug, error, fatal, info, warn
 def download_key(iteration=1, max_tries=5):
     keygen = ""
     try:
-        url = "http://tglobal.krx.co.kr/contents/COM/GenerateOTP.jspx?bld=COM/finder_stkisu_en&name=form&_=1497515946793"
+        url = "http://global.krx.co.kr/contents/COM/GenerateOTP.jspx?bld=COM/finder_stkisu_en&name=form&_=1497515946793"
         info("Retrieving url %s" % (url))
         urlResp = urlopen(url, timeout=60)
         charset=urlResp.info().get_content_charset()
@@ -58,7 +58,7 @@ def download_json(keygen, iteration=1, max_tries=5):
 
         params = urlencode(params)
         params = params.encode('ascii') # data should be bytes        
-        url = "http://tglobal.krx.co.kr/contents/GLB/99/GLB99000001.jspx"
+        url = "http://global.krx.co.kr/contents/GLB/99/GLB99000001.jspx"
         req = Request(url, params)     
         info("Retrieving url %s" % (url))
         urlResp = urlopen(req, timeout=120)

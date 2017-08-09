@@ -96,7 +96,8 @@ def build_summary(exchtype, output):
                 error("Missing 'block1' key")
         else:
             error("Products file is missing [%s]" % (productsfile))  
-            
+    
+    tickers = list(set(tickers)) #remove duplicates
     for ticker in sorted(tickers):
         if ticker in shortlist:
             sumdict.update(download_summary(ticker), iteration=1, max_tries=1)
