@@ -53,3 +53,24 @@ class HKEXSecurityList(HTMLParser):
                 if data == "F":
                     self.data[self.stockcode]["SSF"] = 'T'
             self.cellctr += 1
+            
+# create a subclass and override the handler methods
+class HKEXShorts(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.table = 0
+        self.data = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'table':
+            self.table = 1 
+        if tag == 'a' and self.table > 0:
+            for attr in attrs:
+                if attr[1].endswith('.csv'):
+                    self.data.append('https://www.hkex.com.hk' + attr[1])
+                
+    def handle_endtag(self, tag):
+        if tag == 'table' and self.table > 0:
+            self.table = 0
+            
+                                                           
