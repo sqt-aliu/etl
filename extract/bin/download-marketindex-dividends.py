@@ -6,7 +6,7 @@ import sys
 import getopt
 import os.path
 from datetime import datetime, date
-from urllib.request import urlopen, urlretrieve
+from urllib.request import urlopen, urlretrieve, Request
 from urllib.error import URLError, HTTPError
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 from common.lib.log import debug, error, fatal, info, warn
@@ -14,11 +14,13 @@ from extract.lib.marketindex import MarketIndexDividends
 
 def download_page(url, iteration=1, max_tries=5):
     pagedata = []
+
     try:
-        urlResp = urlopen(url, timeout=30)
+        req = Request(url)
+        req.add_header('User-Agent', 'Mozilla/5.0')
+        urlResp = urlopen(req, timeout=30)
         html = urlResp.read()
         urlResp.close()
-
         # instantiate the parser and fed it some HTML
         htmlparser = MarketIndexDividends()
         htmlparser.feed(str(html))
