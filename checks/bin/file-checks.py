@@ -159,7 +159,7 @@ def process_checks(group, checks):
     info(html)
 
     subj = "[%s] [%s] [%s] Monitor" % ("ALARM" if alarm else "OK", group, socket.gethostname())
-    dist = "allenliu@htsc.com,wangwei@htsc.com,brucezhou@htsc.com"
+    dist = "allenliu@htsc.com"
     mail_html(html, subj, dist, "sqt@htsc.com")
     #mail_html(html, subj, "allenliu@htsc.com", "sqt@htsc.com")
     
